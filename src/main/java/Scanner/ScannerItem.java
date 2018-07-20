@@ -270,6 +270,48 @@ public class ScannerItem implements Comparable<ScannerItem>
 		return a.compareTo(b);
 	}
 
+	// ****************************
+	//
+	// Getters and Setters
+	//
+	// ****************************
+
+	public ArrayList<Node> getNodes()
+	{
+		// Add controll to visu labels from api
+		ArrayList<Node> nodes = new ArrayList<Node>();
+		// nodes.add(labelPath);
+		// nodes.add(labelNext);
+		// nodes.add(labelPrev);
+		nodes.add(textField);
+		return nodes;
+
+	}
+
+	public Node getLine()
+	{
+		if (prevItem != null)
+		{
+			double startX = prevItem.textField.getLayoutX() + textField.getPrefWidth();
+			double startY = prevItem.textField.getLayoutY() + textField.getPrefHeight() / 2;
+
+			double endX = textField.getLayoutX();
+			double endY = textField.getLayoutY() + textField.getPrefHeight() / 2;
+
+			lineTo1.setX(startX + ((endX - startX) / 2));
+			lineTo1.setY(startY);
+
+			lineTo2.setX(lineTo1.getX());
+			lineTo2.setY(endY);
+
+			Line.getElements().add(new MoveTo(startX, startY));
+			Line.getElements().add(lineTo1);
+			Line.getElements().add(lineTo2);
+			Line.getElements().add(new LineTo(endX, endY));
+		}
+		return Line;
+	}
+
 	public String getName()
 	{
 		return name;
@@ -313,42 +355,6 @@ public class ScannerItem implements Comparable<ScannerItem>
 	public void setPath(String path)
 	{
 		this.path = path;
-	}
-
-	public ArrayList<Node> getNodes()
-	{
-		// Add controll to visu labels from api
-		ArrayList<Node> nodes = new ArrayList<Node>();
-		// nodes.add(labelPath);
-		// nodes.add(labelNext);
-		// nodes.add(labelPrev);
-		nodes.add(textField);
-		return nodes;
-
-	}
-
-	public Node getLine()
-	{
-		if (prevItem != null)
-		{
-			double startX = prevItem.textField.getLayoutX() + textField.getPrefWidth();
-			double startY = prevItem.textField.getLayoutY() + textField.getPrefHeight() / 2;
-
-			double endX = textField.getLayoutX();
-			double endY = textField.getLayoutY() + textField.getPrefHeight() / 2;
-
-			lineTo1.setX(startX + ((endX - startX) / 2));
-			lineTo1.setY(startY);
-
-			lineTo2.setX(lineTo1.getX());
-			lineTo2.setY(endY);
-
-			Line.getElements().add(new MoveTo(startX, startY));
-			Line.getElements().add(lineTo1);
-			Line.getElements().add(lineTo2);
-			Line.getElements().add(new LineTo(endX, endY));
-		}
-		return Line;
 	}
 
 	public String getPrevPartnerProcessInfo()

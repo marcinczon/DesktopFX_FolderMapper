@@ -21,6 +21,8 @@ public class Parameters
 	public static int positionLabPrevY = 10;
 	public static int positionLabNextX = 100;
 	public static int positionLabNextY = 10;
+	public static int positionCenterXCreatorItem  = 50;
+	public static int positionCenterYCreatorItem  = 12;
 
 	public static String colorLightGray = "lightgray";
 	public static String colorLightBlue = "lightblue";

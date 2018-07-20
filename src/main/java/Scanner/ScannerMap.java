@@ -21,7 +21,6 @@ public class ScannerMap
 
 	private Scanner scanner;
 
-	
 	public ArrayList<Node> getNodes()
 	{
 		ArrayList<Node> tempArray = new ArrayList<>();
@@ -36,7 +35,6 @@ public class ScannerMap
 
 	public void clear()
 	{
-	//	pathSource.setString("");
 		pathsString.clear();
 		mapString.clear();
 		mapItems.clear();
@@ -159,6 +157,12 @@ public class ScannerMap
 			System.out.println();
 		}
 	}
+	
+	// ****************************
+	//
+	// 		Getters and Setters
+	//
+	// ****************************
 
 	public void setReferencePathSource(StringWrap pathSource)
 	{
@@ -189,9 +193,5 @@ public class ScannerMap
 	{
 		this.scanner = scanner;
 	}
-
-
-
-
 
 }

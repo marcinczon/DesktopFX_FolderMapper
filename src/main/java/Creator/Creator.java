@@ -2,39 +2,31 @@ package Creator;
 
 import java.io.File;
 
+import GeneralParameters.Strings;
 import Scanner.StringWrap;
-import javafx.event.ActionEvent;
+
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import javafx.stage.DirectoryChooser;
 
-
-import static FXML_Controllers.FXML_MainController.fxml_MainController;
+//import static FXML_Controllers.FXML_MainController.fxml_MainController;
 
 public class Creator
 {
 	private static Pane paneMap;
 	private static CreatorItem[] classFolderTable = null;
-	
+
 	private String masterPath;
 	private StringWrap pathSource;
 
-	static double oldX = 0;
-	static double oldY = 0;
-
-	static int objectCounter = 1;
-	static int objectCounter2 = 0;
+	//static int objectCounter = 1;
+	static int objectCounter = 0;
 	static int recurentCounter = 0;
 
-	static int iDSelected = 0;
 	static int iDPrev = 0;
 	static int iDNext = 0;
-	static int iDSelectedNew = 0;
 	static int iDSelectedOld = 0;
 	static boolean folderIsSelected = false;
 	static boolean isTrigger = false;
@@ -42,8 +34,6 @@ public class Creator
 	public Creator()
 	{
 		classFolderTable = new CreatorItem[50];
-		
-
 	}
 
 	public void startCreating()
@@ -60,26 +50,22 @@ public class Creator
 
 	private void runEvents()
 	{
-		if(paneMap!=null)
 		paneMap.setOnMouseReleased(new EventHandler<MouseEvent>()
 		{
 			@Override
 			public void handle(MouseEvent event)
 			{
-				System.out.println("test klikniecia");
 				MouseButton button = event.getButton();
 
 				if (button == MouseButton.PRIMARY)
 				{
-					objectCounter2++;
+					objectCounter++;
 					CreatorItem folder;
-					folder = new CreatorItem(null, null, masterPath, String.valueOf(objectCounter2), event.getX(), event.getY());
-					classFolderTable[objectCounter2] = folder;
+					folder = new CreatorItem(masterPath, String.valueOf(objectCounter), event.getX(), event.getY());
+					classFolderTable[objectCounter] = folder;
 				}
 			}
 		});
-		else
-			System.out.println("PaneMap null");
 	}
 
 	// Rekurent
@@ -89,7 +75,7 @@ public class Creator
 		{
 			for (CreatorItem index : folder.getPartnerPrev().getPartnerNext())
 			{
-				index.setPath(folder.getPartnerPrev().getPath() + "\\" + index.getName());
+				index.setPath(folder.getPartnerPrev().getPath() + Strings.textSymbol2 + index.getName());
 				createFolderFromTable(folder.getPartnerPrev());
 			}
 		}
@@ -112,7 +98,7 @@ public class Creator
 					}
 				} else
 				{
-					x.setPath(masterPath + "\\" + x.getName());
+					x.setPath(masterPath + Strings.textSymbol2 + x.getName());
 				}
 			}
 		}
@@ -126,7 +112,11 @@ public class Creator
 		}
 	}
 
-
+	// ****************************
+	//
+	// Getters and Setters
+	//
+	// ****************************
 
 	public static Pane getPaneCentrum()
 	{
@@ -167,17 +157,6 @@ public class Creator
 	{
 		Creator.iDNext = iDNext;
 	}
-
-	public static int getIDSelectedNew()
-	{
-		return iDSelectedNew;
-	}
-
-	public static void setIDSelectedNew(int iDSelectedNew)
-	{
-		Creator.iDSelectedNew = iDSelectedNew;
-	}
-
 	public static int getIDSelectedOld()
 	{
 		return iDSelectedOld;
@@ -186,16 +165,6 @@ public class Creator
 	public static void setIDSelectedOld(int iDSelectedOld)
 	{
 		Creator.iDSelectedOld = iDSelectedOld;
-	}
-
-	public static int getIDSelected()
-	{
-		return iDSelected;
-	}
-
-	public static void setIDSelected(int iDSelected)
-	{
-		Creator.iDSelected = iDSelected;
 	}
 
 	public static boolean isTrigger()
@@ -213,8 +182,9 @@ public class Creator
 		this.pathSource = pathSource;
 	}
 
-	public  void setPaneMap(Pane paneMap)
+	public void setPaneMap(Pane paneMap)
 	{
+		System.out.println("                Panemenu initialized!");
 		Creator.paneMap = paneMap;
 		runEvents();
 	}

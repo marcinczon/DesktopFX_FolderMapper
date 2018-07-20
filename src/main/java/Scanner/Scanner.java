@@ -33,6 +33,7 @@ public class Scanner
 	// miedzy nim
 	// i dodaje do tablicy
 	// ***************************************
+	
 	public static String[] folderSegmentation(String pathTemp)
 	{
 		StringBuffer sb = new StringBuffer();
@@ -216,6 +217,12 @@ public class Scanner
 			}
 		}
 	}
+	
+	// ****************************
+	//
+	// 		Getters and Setters
+	//
+	// ****************************
 
 	public boolean isContinueLoop()
 	{

@@ -3,6 +3,8 @@ package Creator;
 import java.io.File;
 import java.util.ArrayList;
 
+import GeneralParameters.Parameters;
+import GeneralParameters.Strings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -17,11 +19,12 @@ import javafx.scene.shape.Line;
 
 public class CreatorItem
 {
-	private String path = "";
-	private String name = "Empty";
+	private String path = Strings.textNull;
+	private String name = Strings.textEmpty;
 	private CreatorItem partnerPrev = null;
 	private ArrayList<CreatorItem> partnerNext = new ArrayList<CreatorItem>();
 	private ObservableList<CreatorItem> oListPartnerNext = FXCollections.observableList(partnerNext);
+
 	private static int objectCounter = 0;
 	private int iD = 0;
 	private double pointX = 0;
@@ -32,7 +35,9 @@ public class CreatorItem
 
 	CreatorItem[] Foldery = Creator.getTablicaClassFolderow();
 
-	public CreatorItem(CreatorItem fcPrev, CreatorItem fxNext, String spath, String sname, double pX, double pY)
+	// Wywalic parametry konstruktora
+
+	public CreatorItem(String spath, String sname, double pX, double pY)
 	{
 
 		objectCounter++;
@@ -43,31 +48,45 @@ public class CreatorItem
 			this.path = spath;
 		} else
 		{
-			this.path = "D:\\";
+			this.path = Strings.textDefaultPath;
 		}
 		this.name = sname;
 		this.pointX = pX;
 		this.pointY = pY;
 
-		textField = new TextField("Folder_" + name);
-		textField.setPrefSize(100, 25);
-		textField.setLayoutX(pointX - 50);
-		textField.setLayoutY(pointY - 12);
+		textField = new TextField(Strings.textDefaultName + name);
+		textField.setPrefSize(Parameters.preferSizeWidth, Parameters.preferSizeHeigh);
+		textField.setLayoutX(pointX - Parameters.positionCenterXCreatorItem);
+		textField.setLayoutY(pointY - Parameters.positionCenterYCreatorItem);
+		textField.setStyle(Strings.font1);
 		textField.toBack();
 		name = textField.getText();
 
-		labelPrev = new Label("Prev");
-		labelPrev.setLayoutX(textField.getLayoutX() - 25);
-		labelPrev.setLayoutY(textField.getLayoutY() + 25);
+		labelPrev = new Label(Strings.textPrev);
+		labelPrev.setLayoutX(textField.getLayoutX() + Parameters.positionLabPrevX);
+		labelPrev.setLayoutY(textField.getLayoutY() + Parameters.positionLabPrevY);
 
-		labelNext = new Label("Next");
-		labelNext.setLayoutX(textField.getLayoutX() + 100);
-		labelNext.setLayoutY(textField.getLayoutY() + 25);
+		labelNext = new Label(Strings.textNext);
+		labelNext.setLayoutX(textField.getLayoutX() + Parameters.positionLabNextX);
+		labelNext.setLayoutY(textField.getLayoutY() + Parameters.positionLabNextY);
 
 		Creator.getPaneCentrum().getChildren().add(textField);
-		Creator.getPaneCentrum().getChildren().add(labelPrev);
-		Creator.getPaneCentrum().getChildren().add(labelNext);
+		// Creator.getPaneCentrum().getChildren().add(labelPrev);
+		// Creator.getPaneCentrum().getChildren().add(labelNext);
 
+		ListenerInitialize();
+
+		System.out.println("Creating new Item: " + name);
+
+	}
+	// ****************************
+	//
+	// LOGIC
+	//
+	// ****************************
+
+	private void ListenerInitialize()
+	{
 		textField.setOnMouseReleased(new EventHandler<MouseEvent>()
 		{
 			@Override
@@ -76,47 +95,7 @@ public class CreatorItem
 				MouseButton button = event.getButton();
 				if (button == MouseButton.MIDDLE)
 				{
-					if (Creator.isTrigger())
-					{
-
-						// Zabezpiecznie przed dodaniem prev i next do samego siebie
-						if (Creator.getIDPrev() != Creator.getIDNext())
-						{
-							if (partnerPrev == null)
-							{
-								System.out.println(iD + " -Trigger: " + Creator.getIDPrev() + " -> " + Creator.getIDNext());
-								partnerPrev = Creator.getTablicaClassFolderow()[Creator.getIDPrev()];
-								Creator.getTablicaClassFolderow()[Creator.getIDPrev()].setPartnerNext(CreatorItem.this);
-								Creator.setTrigger(false);
-								Creator.setFolderSelected(false);
-								Creator.setIDPrev(0);
-								Creator.setIDNext(0);
-								//
-								Line _line = new Line();
-
-								_line.setStartX(partnerPrev.getPointX());
-								_line.setStartY(partnerPrev.getPointY());
-								_line.setEndX(pointX);
-								_line.setEndY(pointY);
-
-								Creator.getPaneCentrum().getChildren().add(_line);
-
-								if (partnerPrev.getName() != null)
-								{
-									labelPrev.setText(partnerPrev.getName());
-								}
-
-							} else
-							{
-								System.out.println("Child can have only one partent");
-								System.out.println("Failed Connection " + iD + " - Trigger: " + Creator.getIDPrev() + " -> " + Creator.getIDNext());
-							}
-						} else
-						{
-							System.out.println("Error Same ID Number!");
-						}
-					}
-
+					LogicMouseReleased();
 				}
 			}
 		});
@@ -128,32 +107,7 @@ public class CreatorItem
 				MouseButton button = event.getButton();
 				if (button == MouseButton.MIDDLE)
 				{
-					// Usuwanie obiekt�w ktore s� takie same w prev, next nie moga byc takie same
-					if (partnerNext.contains(partnerPrev))
-					{
-						System.out.println("Error Contain Prev");
-						partnerNext.remove(partnerPrev);
-						labelPrev.setText("Prev");
-					}
-					if (partnerNext.contains(CreatorItem.this))
-					{
-						System.out.println("Error Contain Actual");
-						partnerNext.remove(CreatorItem.this);
-						labelNext.setText("Next");
-					}
-
-					if (!Creator.isFolderSelected())
-					{
-						Creator.setFolderSelected(true);
-						Creator.setIDPrev(iD);
-					} else if (Creator.getIDSelectedOld() != iD)
-					{
-						Creator.setIDNext(iD);
-						Creator.setFolderSelected(false);
-						Creator.setTrigger(true);
-					}
-
-					Creator.setIDSelectedOld(iD);
+					LogicMousePressed();
 				}
 			}
 		});
@@ -169,25 +123,104 @@ public class CreatorItem
 		{
 			public void onChanged(ListChangeListener.Change change)
 			{
-				String labelNextString = "";
-
-				if (!partnerNext.isEmpty())
-				{
-
-					for (CreatorItem index : partnerNext)
-					{
-						if (index.getName() != null)
-						{
-							labelNextString = labelNextString + String.format("%s\n", index.getName());
-							labelNext.setText(labelNextString);
-						}
-					}
-				} else
-				{
-					System.out.println("Next is Empty ID: " + iD);
-				}
+				LogicListenerPartnerNext();
 			}
 		});
+	}
+
+	private void LogicMouseReleased()
+	{
+		if (Creator.isTrigger())
+		{
+			// Zabezpiecznie przed dodaniem prev i next do samego siebie
+			if (Creator.getIDPrev() != Creator.getIDNext())
+			{
+				if (partnerPrev == null)
+				{
+					System.out.println(String.format(Strings.fxControlCommand2, iD, Creator.getIDPrev(), Creator.getIDNext()));
+					partnerPrev = Creator.getTablicaClassFolderow()[Creator.getIDPrev()];
+					Creator.getTablicaClassFolderow()[Creator.getIDPrev()].setPartnerNext(CreatorItem.this);
+					Creator.setTrigger(false);
+					Creator.setFolderSelected(false);
+					Creator.setIDPrev(0);
+					Creator.setIDNext(0);
+
+					Line line = new Line();
+
+					line.setStartX(partnerPrev.getPointX());
+					line.setStartY(partnerPrev.getPointY());
+					line.setEndX(pointX);
+					line.setEndY(pointY);
+
+					Creator.getPaneCentrum().getChildren().add(line);
+
+					if (partnerPrev.getName() != null)
+					{
+						labelPrev.setText(partnerPrev.getName());
+					}
+
+				} else
+				{
+					System.out.println(Strings.textMessage1);
+					System.out.println(String.format(Strings.fxControlCommand3, iD, Creator.getIDPrev(), Creator.getIDNext()));
+
+				}
+			} else
+			{
+				System.out.println(Strings.textError1);
+			}
+		}
+	}
+
+	public void LogicMousePressed()
+	{
+		// Usuwanie obiekt�w ktore s� takie same w prev, next nie moga byc takie same
+		if (partnerNext.contains(partnerPrev))
+		{
+			System.out.println(Strings.textError2);
+			partnerNext.remove(partnerPrev);
+			labelPrev.setText(Strings.textPrev);
+		}
+		if (partnerNext.contains(CreatorItem.this))
+		{
+			System.out.println(Strings.textError3);
+			partnerNext.remove(CreatorItem.this);
+			labelNext.setText(Strings.textNext);
+		}
+
+		if (!Creator.isFolderSelected())
+		{
+			Creator.setFolderSelected(true);
+			Creator.setIDPrev(iD);
+		} else if (Creator.getIDSelectedOld() != iD)
+		{
+			Creator.setIDNext(iD);
+			Creator.setFolderSelected(false);
+			Creator.setTrigger(true);
+		}
+
+		Creator.setIDSelectedOld(iD);
+	}
+
+	public void LogicListenerPartnerNext()
+	{
+		String labelNextString = Strings.textNull;
+
+		if (!partnerNext.isEmpty())
+		{
+
+			for (CreatorItem index : partnerNext)
+			{
+				if (index.getName() != null)
+				{
+					labelNextString = labelNextString + String.format("%s\n", index.getName());
+					labelNext.setText(labelNextString);
+				}
+			}
+		} else
+		{
+			System.out.println(Strings.textMessage2 + iD);
+		}
 	}
 
 	public void createFolder()
@@ -196,27 +229,27 @@ public class CreatorItem
 
 		if (objectCounter == 0 || partnerPrev == null)
 		{
-			String folderName = path + "\\" + name;
+			String folderName = path + Strings.textSymbol2 + name;
 			boolean success = (new File(folderName)).mkdirs();
 			if (!success)
 			{
-				System.out.println("Failed Init: " + objectCounter + " >> " + folderName);
+				System.out.println(Strings.textMessage3 + objectCounter + Strings.textSymbol1 + folderName);
 			} else
 			{
 				path = folderName;
-				System.out.println("Succes Init: " + objectCounter + " >> " + folderName);
+				System.out.println(Strings.textMessage4 + objectCounter + Strings.textSymbol1 + folderName);
 			}
 		} else
 		{
-			String folderName = partnerPrev.getPath() + "\\" + name;
+			String folderName = partnerPrev.getPath() + Strings.textSymbol2 + name;
 			boolean success = (new File(folderName)).mkdirs();
 			if (!success)
 			{
-				System.out.println("Failed Layer: " + objectCounter + " >> " + folderName);
+				System.out.println(Strings.textMessage5 + objectCounter + Strings.textSymbol1 + folderName);
 			} else
 			{
 				path = folderName;
-				System.out.println("Succes Layer: " + objectCounter + " >> " + folderName);
+				System.out.println(Strings.textMessage6 + objectCounter + Strings.textSymbol1 + folderName);
 			}
 		}
 	}
@@ -226,13 +259,19 @@ public class CreatorItem
 		boolean success = (new File(path)).mkdirs();
 		if (!success)
 		{
-			System.out.println("Failed Create: >> " + path);
+			System.out.println(Strings.textMessage7 + path);
 		} else
 		{
-			System.out.println("Succes Create: >> " + path);
+			System.out.println(Strings.textMessage8 + path);
 		}
 
 	}
+
+	// ****************************
+	//
+	// Getters and Setters
+	//
+	// ****************************
 
 	public String getPath()
 	{
