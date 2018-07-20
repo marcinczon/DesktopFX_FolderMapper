@@ -16,7 +16,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.shape.Line;
-
+import static  Creator.Creator.creator;
 public class CreatorItem
 {
 	private String path = Strings.textNull;
@@ -33,9 +33,6 @@ public class CreatorItem
 	private Label labelPrev = null;
 	private Label labelNext = null;
 
-	CreatorItem[] Foldery = Creator.getTablicaClassFolderow();
-
-	// Wywalic parametry konstruktora
 
 	public CreatorItem(String spath, String sname, double pX, double pY)
 	{
@@ -70,7 +67,7 @@ public class CreatorItem
 		labelNext.setLayoutX(textField.getLayoutX() + Parameters.positionLabNextX);
 		labelNext.setLayoutY(textField.getLayoutY() + Parameters.positionLabNextY);
 
-		Creator.getPaneCentrum().getChildren().add(textField);
+		creator.getPaneCentrum().getChildren().add(textField);
 		// Creator.getPaneCentrum().getChildren().add(labelPrev);
 		// Creator.getPaneCentrum().getChildren().add(labelNext);
 
@@ -130,20 +127,20 @@ public class CreatorItem
 
 	private void LogicMouseReleased()
 	{
-		if (Creator.isTrigger())
+		if (CreatorValues.isTrigger())
 		{
 			// Zabezpiecznie przed dodaniem prev i next do samego siebie
-			if (Creator.getIDPrev() != Creator.getIDNext())
+			if (CreatorValues.getiDPrev() != CreatorValues.getiDNext())
 			{
 				if (partnerPrev == null)
 				{
-					System.out.println(String.format(Strings.fxControlCommand2, iD, Creator.getIDPrev(), Creator.getIDNext()));
-					partnerPrev = Creator.getTablicaClassFolderow()[Creator.getIDPrev()];
-					Creator.getTablicaClassFolderow()[Creator.getIDPrev()].setPartnerNext(CreatorItem.this);
-					Creator.setTrigger(false);
-					Creator.setFolderSelected(false);
-					Creator.setIDPrev(0);
-					Creator.setIDNext(0);
+					System.out.println(String.format(Strings.fxControlCommand2, iD, CreatorValues.getiDPrev(), CreatorValues.getiDNext()));
+					partnerPrev = CreatorValues.getClassFolderTable()[CreatorValues.getiDPrev()];
+					CreatorValues.getClassFolderTable()[CreatorValues.getiDPrev()].setPartnerNext(CreatorItem.this);
+					CreatorValues.setTrigger(false);
+					CreatorValues.setFolderIsSelected(false);
+					CreatorValues.setiDPrev(0);
+					CreatorValues.setiDNext(0);
 
 					Line line = new Line();
 
@@ -152,7 +149,7 @@ public class CreatorItem
 					line.setEndX(pointX);
 					line.setEndY(pointY);
 
-					Creator.getPaneCentrum().getChildren().add(line);
+					creator.getPaneCentrum().getChildren().add(line);
 
 					if (partnerPrev.getName() != null)
 					{
@@ -162,7 +159,7 @@ public class CreatorItem
 				} else
 				{
 					System.out.println(Strings.textMessage1);
-					System.out.println(String.format(Strings.fxControlCommand3, iD, Creator.getIDPrev(), Creator.getIDNext()));
+					System.out.println(String.format(Strings.fxControlCommand3, iD, CreatorValues.getiDPrev(), CreatorValues.getiDNext()));
 
 				}
 			} else
@@ -188,18 +185,18 @@ public class CreatorItem
 			labelNext.setText(Strings.textNext);
 		}
 
-		if (!Creator.isFolderSelected())
+		if (!CreatorValues.isFolderIsSelected())
 		{
-			Creator.setFolderSelected(true);
-			Creator.setIDPrev(iD);
-		} else if (Creator.getIDSelectedOld() != iD)
+			CreatorValues.setFolderIsSelected(true);
+			CreatorValues.setiDPrev(iD);
+		} else if (CreatorValues.getiDSelectedOld() != iD)
 		{
-			Creator.setIDNext(iD);
-			Creator.setFolderSelected(false);
-			Creator.setTrigger(true);
+			CreatorValues.setiDNext(iD);
+			CreatorValues.setFolderIsSelected(false);
+			CreatorValues.setTrigger(true);
 		}
 
-		Creator.setIDSelectedOld(iD);
+		CreatorValues.setiDSelectedOld(iD);
 	}
 
 	public void LogicListenerPartnerNext()

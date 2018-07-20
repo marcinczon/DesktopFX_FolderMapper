@@ -1,7 +1,5 @@
 package Creator;
 
-import java.io.File;
-
 import GeneralParameters.Strings;
 import Scanner.StringWrap;
 
@@ -10,42 +8,32 @@ import javafx.event.EventHandler;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-
-//import static FXML_Controllers.FXML_MainController.fxml_MainController;
+import javafx.scene.shape.Rectangle;
 
 public class Creator
 {
-	private static Pane paneMap;
-	private static CreatorItem[] classFolderTable = null;
+
+	public static Creator creator;
+	private Pane paneMap;
 
 	private String masterPath;
 	private StringWrap pathSource;
 
-	//static int objectCounter = 1;
-	static int objectCounter = 0;
-	static int recurentCounter = 0;
-
-	static int iDPrev = 0;
-	static int iDNext = 0;
-	static int iDSelectedOld = 0;
-	static boolean folderIsSelected = false;
-	static boolean isTrigger = false;
-
 	public Creator()
 	{
-		classFolderTable = new CreatorItem[50];
+		creator = this;
 	}
 
 	public void startCreating()
 	{
 		masterPath = pathSource.getString();
 
-		for (CreatorItem Folder : classFolderTable)
+		for (CreatorItem Folder : CreatorValues.getClassFolderTable())
 		{
 			if (Folder != null)
 				Folder.setPath(masterPath);
 		}
-		createFolderFromTable(classFolderTable);
+		createFolderFromTable(CreatorValues.getClassFolderTable());
 	}
 
 	private void runEvents()
@@ -59,10 +47,9 @@ public class Creator
 
 				if (button == MouseButton.PRIMARY)
 				{
-					objectCounter++;
-					CreatorItem folder;
-					folder = new CreatorItem(masterPath, String.valueOf(objectCounter), event.getX(), event.getY());
-					classFolderTable[objectCounter] = folder;
+					CreatorValues.setObjectCounter(CreatorValues.getObjectCounter() + 1);
+					CreatorItem folder = new CreatorItem(masterPath, String.valueOf(CreatorValues.getObjectCounter()), event.getX(), event.getY());
+					CreatorValues.getClassFolderTable()[CreatorValues.getObjectCounter()] = folder;
 				}
 			}
 		});
@@ -118,63 +105,9 @@ public class Creator
 	//
 	// ****************************
 
-	public static Pane getPaneCentrum()
+	public Pane getPaneCentrum()
 	{
 		return paneMap;
-	}
-
-	public static CreatorItem[] getTablicaClassFolderow()
-	{
-		return classFolderTable;
-	}
-
-	public static boolean isFolderSelected()
-	{
-		return folderIsSelected;
-	}
-
-	public static void setFolderSelected(boolean folderIsSelected)
-	{
-		Creator.folderIsSelected = folderIsSelected;
-	}
-
-	public static int getIDPrev()
-	{
-		return iDPrev;
-	}
-
-	public static void setIDPrev(int iDPrev)
-	{
-		Creator.iDPrev = iDPrev;
-	}
-
-	public static int getIDNext()
-	{
-		return iDNext;
-	}
-
-	public static void setIDNext(int iDNext)
-	{
-		Creator.iDNext = iDNext;
-	}
-	public static int getIDSelectedOld()
-	{
-		return iDSelectedOld;
-	}
-
-	public static void setIDSelectedOld(int iDSelectedOld)
-	{
-		Creator.iDSelectedOld = iDSelectedOld;
-	}
-
-	public static boolean isTrigger()
-	{
-		return isTrigger;
-	}
-
-	public static void setTrigger(boolean setIsTrigger)
-	{
-		isTrigger = setIsTrigger;
 	}
 
 	public void setReferencePathSource(StringWrap pathSource)
@@ -184,8 +117,7 @@ public class Creator
 
 	public void setPaneMap(Pane paneMap)
 	{
-		System.out.println("                Panemenu initialized!");
-		Creator.paneMap = paneMap;
+		this.paneMap = paneMap;				
 		runEvents();
 	}
 }

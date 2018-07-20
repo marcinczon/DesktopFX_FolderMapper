@@ -19,6 +19,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import test.test;
 
 // Future work
 // 1. Problem po wystapieniu bledu odczytu, po ponownym ustawieniu sciezki juz nie oczytuje
@@ -39,6 +40,8 @@ public class Start extends Application
 	private static Scanner SCANNER;
 	private static ScannerMap MAP;
 	private static Creator CREATOR;
+	
+	//private static test teest = new test();
 
 	
 	public static void main(String[] args)
@@ -69,6 +72,9 @@ public class Start extends Application
 	private static void initialize()
 	{
 		CREATOR =  new Creator();
+		CREATOR.setPaneMap(fxml_MainController.getPaneMap());
+		CREATOR.setReferencePathSource(PATH_SOURCE);
+		
 		MAP = new ScannerMap();
 		SCANNER = new Scanner();
 		
@@ -79,15 +85,16 @@ public class Start extends Application
 
 		SCANNER.setReferenceToPath(PATHS_STRINGS);
 		
-		CREATOR.setReferencePathSource(PATH_SOURCE);
-		CREATOR.setPaneMap(fxml_MainController.getPaneMap());
-	
+		
+		
 		MAP.setReferenceScanner(SCANNER);
 		MAP.setReferencePathSource(PATH_SOURCE);
 		MAP.setRefrencePath(PATHS_STRINGS);
 		MAP.setReferenceMapString(MAP_STRING);
 		MAP.setReferenceMapItems(MAP_ITEMS);
 		MAP.setReferenceFinalMapItem(FINAL_MAP_ITEMS);
+		
+		//teest.setPaneMap(fxml_MainController.getPaneMap());
 		
 		
 	}

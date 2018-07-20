@@ -2,9 +2,11 @@ package FXML_Controllers;
 
 import java.awt.TextField;
 import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.TreeSet;
 
 import Creator.Creator;
@@ -18,6 +20,7 @@ import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
@@ -25,7 +28,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 
-public class FXML_MainController
+public class FXML_MainController implements Initializable
 {
 
 	public static FXML_MainController fxml_MainController;
@@ -33,6 +36,7 @@ public class FXML_MainController
 	public FXML_MainController()
 	{
 		fxml_MainController = this;
+	
 	}
 
 	// References
@@ -49,6 +53,8 @@ public class FXML_MainController
 
 	private StringBuilder stringBuilder = new StringBuilder();
 
+	// Set size of paneMap like spMap
+
 	@FXML
 	Button buttonFile;
 	@FXML
@@ -62,6 +68,7 @@ public class FXML_MainController
 	@FXML
 	Label lPath;
 
+	
 	@FXML
 	public void onMouseClickedFile(MouseEvent event)
 	{
@@ -97,7 +104,7 @@ public class FXML_MainController
 						map.clear();
 						paneMap.getChildren().clear();
 						finalMapItem.clear();
-						
+
 						printLog("Status Create List");
 						map.createList();
 						printLog("Status Create Map String");
@@ -125,6 +132,13 @@ public class FXML_MainController
 		thread1.start();
 		thread1.setName("Mapping");
 
+	}
+
+	@FXML
+	public void testClicked(MouseEvent event)
+	{
+		System.out.println(spMap.getWidth() + " " + spMap.getHeight());
+		System.out.println(paneMap.getWidth() + " " + paneMap.getHeight());
 	}
 
 	@FXML
@@ -163,6 +177,14 @@ public class FXML_MainController
 	public void setReferenceCreator(Creator creator)
 	{
 		this.creator = creator;
+	}
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources)
+	{
+		// Zmienić property zbindować do odpwoiedniej wartosci z spMap
+		paneMap.prefHeightProperty().bind(spMap.prefViewportHeightProperty());
+		paneMap.prefWidthProperty().bind(spMap.prefViewportWidthProperty());
 	}
 
 }
