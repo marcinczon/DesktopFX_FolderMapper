@@ -12,16 +12,19 @@ public class StringWrap
 	public StringWrap(String s)
 	{
 		this.string = s;
+		System.out.println("Kon wrap: " + this.string);
 	}
 
 	public String getString()
 	{
+		System.out.println("Get wrap: " + this.string);
 		return this.string;
 	}
 
 	public void setString(String s)
-	{
+	{		
 		this.string = s;
+		System.out.println("Set wrap: " + this.string);
 	}
 
 	@Override

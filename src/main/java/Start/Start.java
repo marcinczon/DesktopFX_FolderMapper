@@ -7,8 +7,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
 
-import Scanner.Item;
-import Scanner.Map;
+import Creator.Creator;
+import Scanner.ScannerItem;
+import Scanner.ScannerMap;
 import Scanner.Scanner;
 import Scanner.StringWrap;
 import javafx.application.Application;
@@ -19,15 +20,25 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+// Future work
+// 1. Problem po wystapieniu bledu odczytu, po ponownym ustawieniu sciezki juz nie oczytuje
+//
+//
+//
+
+
+
 public class Start extends Application
 {
-	private static StringWrap PATH_SOURCE = new StringWrap("D:\\");
+	private static StringWrap PATH_SOURCE = new StringWrap("C:\\");
 	private static List<String> PATHS_STRINGS = new ArrayList<String>();
 	private static ArrayList<String[]> MAP_STRING = new ArrayList<>();
-	private static ArrayList<LinkedList<Item>> MAP_ITEMS = new ArrayList<>();
-	private static TreeSet<Item> FINAL_MAP_ITEMS = new TreeSet<Item>();
-	private static Scanner SCANNER = new Scanner();
-	private static Map MAP = new Map();
+	private static ArrayList<LinkedList<ScannerItem>> MAP_ITEMS = new ArrayList<>();
+	private static TreeSet<ScannerItem> FINAL_MAP_ITEMS = new TreeSet<ScannerItem>();
+	
+	private static Scanner SCANNER;
+	private static ScannerMap MAP;
+	private static Creator CREATOR;
 
 	
 	public static void main(String[] args)
@@ -57,11 +68,19 @@ public class Start extends Application
 	
 	private static void initialize()
 	{
-		fxml_MainController.setReferencePathSource(PATH_SOURCE);
-		fxml_MainController.setReferenceMap(MAP);
+		CREATOR =  new Creator();
+		MAP = new ScannerMap();
+		SCANNER = new Scanner();
+		
+		fxml_MainController.setReferencePathSource(PATH_SOURCE);		
 		fxml_MainController.setReferenceFinalMapItem(FINAL_MAP_ITEMS);
+		fxml_MainController.setReferenceMap(MAP);
+		fxml_MainController.setReferenceCreator(CREATOR);
 
 		SCANNER.setReferenceToPath(PATHS_STRINGS);
+		
+		CREATOR.setReferencePathSource(PATH_SOURCE);
+		CREATOR.setPaneMap(fxml_MainController.getPaneMap());
 	
 		MAP.setReferenceScanner(SCANNER);
 		MAP.setReferencePathSource(PATH_SOURCE);
@@ -69,5 +88,7 @@ public class Start extends Application
 		MAP.setReferenceMapString(MAP_STRING);
 		MAP.setReferenceMapItems(MAP_ITEMS);
 		MAP.setReferenceFinalMapItem(FINAL_MAP_ITEMS);
+		
+		
 	}
 }

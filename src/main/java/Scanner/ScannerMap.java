@@ -10,23 +10,22 @@ import java.util.TreeSet;
 import javafx.concurrent.Service;
 import javafx.scene.Node;
 
-public class Map
+public class ScannerMap
 {
 	private StringWrap pathSource;
 	List<String> pathsString;
 	ArrayList<String[]> mapString;
-	ArrayList<LinkedList<Item>> mapItems;
-	TreeSet<Item> finalMapItem;
-	TreeSet<Item> copyOfMapITem = new TreeSet<>();
+	ArrayList<LinkedList<ScannerItem>> mapItems;
+	TreeSet<ScannerItem> finalMapItem;
+	TreeSet<ScannerItem> copyOfMapITem = new TreeSet<>();
 
 	private Scanner scanner;
 
 	
 	public ArrayList<Node> getNodes()
 	{
-		//gui.setLOG("Creating GUI");
 		ArrayList<Node> tempArray = new ArrayList<>();
-		Iterator<Item> iterator = finalMapItem.iterator();
+		Iterator<ScannerItem> iterator = finalMapItem.iterator();
 		while (iterator.hasNext())
 		{
 			tempArray.addAll(iterator.next().getNodes());
@@ -37,21 +36,20 @@ public class Map
 
 	public void clear()
 	{
+	//	pathSource.setString("");
 		pathsString.clear();
 		mapString.clear();
 		mapItems.clear();
 		finalMapItem.clear();
-		//gui.setLOG("Clear All");
+		copyOfMapITem.clear();
 	}
 
 	public void generateMap()
 	{
 
-		//gui.setLOG("Generate Final Map");
-
 		for (int index = 0; index < mapItems.size(); index++)
 		{
-			for (Item item : mapItems.get(index))
+			for (ScannerItem item : mapItems.get(index))
 			{
 				if (!mapItems.contains(item))
 				{
@@ -66,11 +64,10 @@ public class Map
 
 	public void reorganizeMapPartners()
 	{
-		//gui.setLOG("Reorganize Map Partner");
-		for (Item item : finalMapItem)
+		for (ScannerItem item : finalMapItem)
 		{
-			Item presentItem = finalMapItem.floor(item);
-			Item prevItem = findItem(presentItem.getPrevPartnerProcessInfo());
+			ScannerItem presentItem = finalMapItem.floor(item);
+			ScannerItem prevItem = findItem(presentItem.getPrevPartnerProcessInfo());
 			if (prevItem != null)
 			{
 				prevItem.setNextItems(item);
@@ -79,9 +76,9 @@ public class Map
 		}
 	}
 
-	private Item findItem(String processPrevInfo)
+	private ScannerItem findItem(String processPrevInfo)
 	{
-		for (Item item : finalMapItem)
+		for (ScannerItem item : finalMapItem)
 		{
 			if (item.getProcessInfo().equals(processPrevInfo))
 			{
@@ -93,8 +90,7 @@ public class Map
 
 	public void checkFinalMap()
 	{
-		//gui.setLOG("Check Final Map");
-		Iterator<Item> iterator = finalMapItem.iterator();
+		Iterator<ScannerItem> iterator = finalMapItem.iterator();
 
 		while (iterator.hasNext())
 		{
@@ -105,13 +101,11 @@ public class Map
 
 	public void createList()
 	{
-		//gui.setLOG(pathSource.toString());
 		scanner.readFolderList(pathSource.getString());
 	}
 
 	public void creatingMapString()
 	{
-		//gui.setLOG("Creating Map String");
 		for (String string : pathsString)
 		{
 			mapString.add(scanner.folderSegmentation(string));
@@ -120,16 +114,14 @@ public class Map
 
 	public void creatingMapItem()
 	{
-		//gui.setLOG("Creating Item Map");
 		int levelY = 0;
 		for (String[] strings : mapString)
 		{
 			int levelX = 0;
-			// Item prevPartner;
 			mapItems.add(new LinkedList<>());
 			for (String string : strings)
 			{
-				mapItems.get(levelY).add(new Item(string, levelX, levelY));
+				mapItems.get(levelY).add(new ScannerItem(string, levelX, levelY));
 				if (levelX > 0)
 				{
 					String prevProcessInfo = mapItems.get(levelY).get(levelX - 1).getProcessInfo();
@@ -145,18 +137,16 @@ public class Map
 
 	public void sortMap()
 	{
-		//gui.setLOG("Sort Map");
 		for (int index1 = 0; index1 < mapItems.size(); index1++)
 		{
-			mapItems.get(index1).sort(new Item.CompareByGridX());
+			mapItems.get(index1).sort(new ScannerItem.CompareByGridX());
 		}
 
 	}
 
 	public void checkItemMap()
 	{
-		//gui.setLOG("Checking Item Map");
-		Iterator<Item> mapItemIterator;
+		Iterator<ScannerItem> mapItemIterator;
 		for (int index1 = 0; index1 < mapItems.size(); index1++)
 		{
 			mapItemIterator = mapItems.get(index1).iterator();
@@ -185,12 +175,12 @@ public class Map
 		this.mapString = mapString;
 	}
 
-	public void setReferenceMapItems(ArrayList<LinkedList<Item>> mapItems)
+	public void setReferenceMapItems(ArrayList<LinkedList<ScannerItem>> mapItems)
 	{
 		this.mapItems = mapItems;
 	}
 
-	public void setReferenceFinalMapItem(TreeSet<Item> finalMapItem)
+	public void setReferenceFinalMapItem(TreeSet<ScannerItem> finalMapItem)
 	{
 		this.finalMapItem = finalMapItem;
 	}

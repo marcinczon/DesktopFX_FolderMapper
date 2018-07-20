@@ -5,6 +5,8 @@ import java.util.Comparator;
 
 import com.sun.javafx.geom.Shape;
 
+import GeneralParameters.Parameters;
+import GeneralParameters.Strings;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -15,19 +17,18 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 
-public class Item implements Comparable<Item>
+import static GeneralParameters.Strings.strings;
+
+public class ScannerItem implements Comparable<ScannerItem>
 {
 	private String name = "";
 	private int levelX;
 	private int levelY;
-	private Item prevItem = null;
-	private ArrayList<Item> nextItems = new ArrayList<Item>();
+	private ScannerItem prevItem = null;
+	private ArrayList<ScannerItem> nextItems = new ArrayList<ScannerItem>();
 	private TextField textField = new TextField();
 	private Label labelPath = new Label();
-	private String style = "-fx-font: normal 10px 'Calibri' ";
-	private String styleSmall = "-fx-font: normal 8px 'Calibri' ";
-	double offsetPositionX = 10;
-	double offsetPositionY = 10;
+
 	private String path = "";
 	private String prevPartnerProcessInfo = "";
 	private String processInfo = "";
@@ -39,51 +40,55 @@ public class Item implements Comparable<Item>
 	private Label labelPrev = new Label();
 	private Label labelNext = new Label();
 
-	public Item(String processInfo, int levelX, int levelY)
+	public ScannerItem(String processInfo, int levelX, int levelY)
 	{
 		this.levelX = levelX;
 		this.levelY = levelY;
 		this.processInfo = processInfo;
 		evaluationInfo();
 		textField.setText(name);
-		textField.setStyle(style);
-		textField.setPrefSize(100, 10);
-		textField.setLayoutX(offsetPositionX + levelX * 120);
-		textField.setLayoutY(offsetPositionY + levelY * 40);
+		textField.setStyle(Strings.font1);
+		textField.setPrefSize(Parameters.preferSizeWidth, Parameters.preferSizeHeigh);
+		textField.setLayoutX(Parameters.positionOffsetX + levelX * Parameters.widthGap);
+		textField.setLayoutY(Parameters.positionOffsetY + levelY * Parameters.heighGap);
 
 		labelPath.setText(path);
-		labelPath.setStyle(style);
-		labelPath.setLayoutX(textField.getLayoutX() + 10);
-		labelPath.setLayoutY(textField.getLayoutY() + 22);
+		labelPath.setStyle(Strings.font1);
+		labelPath.setLayoutX(textField.getLayoutX() + Parameters.positionLabPathX);
+		labelPath.setLayoutY(textField.getLayoutY() + Parameters.positionLabPathY);
 
-		labelPrev.setLayoutX(textField.getLayoutX());
-		labelPrev.setLayoutY(textField.getLayoutY() + 10);
-		labelPrev.setStyle(styleSmall);
+		labelPrev.setLayoutX(textField.getLayoutX() + Parameters.positionLabPrevX);
+		labelPrev.setLayoutY(textField.getLayoutY() + Parameters.positionLabPrevY);
+		labelPrev.setStyle(Strings.font2);
 		labelPrev.setTextFill(Color.GREEN);
 
-		labelNext.setLayoutX(textField.getLayoutX() + 100);
-		labelNext.setLayoutY(textField.getLayoutY() + 10);
-		labelNext.setStyle(styleSmall);
+		labelNext.setLayoutX(textField.getLayoutX() + Parameters.positionLabNextX);
+		labelNext.setLayoutY(textField.getLayoutY() + Parameters.positionLabNextY);
+		labelNext.setStyle(Strings.font2);
 		labelNext.setTextFill(Color.RED);
-		
+
 		this.setLineColor(Color.LIGHTGRAY);
-		this.setTextFieldColor("lightgray");
-		
+		this.setTextFieldColor(Parameters.colorLightGray);
+
 		initListener();
 
 	}
-	
+
 	private void initListener()
 	{
-		textField.setOnMousePressed(new EventHandler<MouseEvent>() {
-			public void handle(MouseEvent event) {
-				setSiblingsColors("lightblue", Color.BLUE, 3);
+		textField.setOnMousePressed(new EventHandler<MouseEvent>()
+		{
+			public void handle(MouseEvent event)
+			{
+				setSiblingsColors(Parameters.colorLightBlue, Color.BLUE, 3);
 			}
 
 		});
-		textField.setOnMouseReleased(new EventHandler<MouseEvent>() {
-			public void handle(MouseEvent event) {
-				setSiblingsColors("lightgray", Color.LIGHTGRAY, 1);
+		textField.setOnMouseReleased(new EventHandler<MouseEvent>()
+		{
+			public void handle(MouseEvent event)
+			{
+				setSiblingsColors(Parameters.colorLightGray, Color.LIGHTGRAY, 1);
 			}
 
 		});
@@ -101,28 +106,28 @@ public class Item implements Comparable<Item>
 		path = path.replace("/", "\\");
 	}
 
-	public static class CompareByName implements Comparator<Item>
+	public static class CompareByName implements Comparator<ScannerItem>
 	{
 		@Override
-		public int compare(Item a, Item b)
+		public int compare(ScannerItem a, ScannerItem b)
 		{
 			return a.name.compareTo(b.name);
 		}
 	}
 
-	public static class CompareByPath implements Comparator<Item>
+	public static class CompareByPath implements Comparator<ScannerItem>
 	{
 		@Override
-		public int compare(Item a, Item b)
+		public int compare(ScannerItem a, ScannerItem b)
 		{
 			return a.path.compareTo(b.path);
 		}
 	}
 
-	public static class CompareByGridX implements Comparator<Item>
+	public static class CompareByGridX implements Comparator<ScannerItem>
 	{
 		@Override
-		public int compare(Item a, Item b)
+		public int compare(ScannerItem a, ScannerItem b)
 		{
 			String obA = Integer.toString(a.levelX);
 			String obB = Integer.toString(b.levelX);
@@ -145,7 +150,7 @@ public class Item implements Comparable<Item>
 		}
 	}
 
-	private void setSiblingsColorsRecurent(Item item, String stringColor, Color color, int width)
+	private void setSiblingsColorsRecurent(ScannerItem item, String stringColor, Color color, int width)
 	{
 		item.setLineColor(color);
 		item.setTextFieldColor(stringColor);
@@ -156,9 +161,9 @@ public class Item implements Comparable<Item>
 		}
 	}
 
-	private void setSiblingsColorsRecurent(ArrayList<Item> items, String stringColor, Color color, int width)
+	private void setSiblingsColorsRecurent(ArrayList<ScannerItem> items, String stringColor, Color color, int width)
 	{
-		for (Item item : items)
+		for (ScannerItem item : items)
 		{
 			if (item != null)
 			{
@@ -185,8 +190,8 @@ public class Item implements Comparable<Item>
 
 	public void setTextFieldColor(String color)
 	{
-		
-		textField.setStyle("-fx-control-inner-background: " + color + ";" + styleSmall);
+
+		textField.setStyle(Strings.fxControlCommand1 + color + ";" + Strings.font2);
 	}
 
 	@Override
@@ -223,7 +228,7 @@ public class Item implements Comparable<Item>
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Item other = (Item) obj;
+		ScannerItem other = (ScannerItem) obj;
 		if (levelX != other.levelX)
 			return false;
 		if (processInfo == null)
@@ -235,30 +240,30 @@ public class Item implements Comparable<Item>
 		return true;
 	}
 
-	public Item getPrevItem()
+	public ScannerItem getPrevItem()
 	{
 		return prevItem;
 	}
 
-	public void setPrevItem(Item prevItem)
+	public void setPrevItem(ScannerItem prevItem)
 	{
 		this.prevItem = prevItem;
 		labelPrev.setText(labelPath.getText() + "\n" + prevItem.getName() + " level Y :" + prevItem.levelY);
 	}
 
-	public ArrayList<Item> getNextItems()
+	public ArrayList<ScannerItem> getNextItems()
 	{
 		return nextItems;
 	}
 
-	public void setNextItems(Item nextItems)
+	public void setNextItems(ScannerItem nextItems)
 	{
 		labelNext.setText(labelNext.getText() + "\n" + nextItems.getName());
 		this.nextItems.add(nextItems);
 	}
 
 	@Override
-	public int compareTo(Item item)
+	public int compareTo(ScannerItem item)
 	{
 		String a = Integer.toString(this.hashCode());
 		String b = Integer.toString(item.hashCode());
@@ -312,6 +317,7 @@ public class Item implements Comparable<Item>
 
 	public ArrayList<Node> getNodes()
 	{
+		// Add controll to visu labels from api
 		ArrayList<Node> nodes = new ArrayList<Node>();
 		// nodes.add(labelPath);
 		// nodes.add(labelNext);

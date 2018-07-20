@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
+import GeneralParameters.Strings;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
@@ -18,22 +19,12 @@ import javafx.scene.control.TextInputDialog;
 import static FXML_Controllers.FXML_MainController.fxml_MainController;
 
  
-public class Scanner implements Runnable
+public class Scanner  
 {
 	private List<String> paths;
 	private boolean continueLoop = true;
 	private static int maxLevel = 0;
 
-	
-
-	// Threads
-	public Thread LocalThread;
-	
-	public Scanner()
-	{
-		LocalThread = new Thread(this, "Thread_Scanner");
-		LocalThread.setDaemon(true);
-	}
 
 	// ***************************************
 	// Segmentacja folderow, wejscie: sciezka pliku i tryb
@@ -160,7 +151,7 @@ public class Scanner implements Runnable
 			path = path + aSegments[level - 1];
 		} else
 		{
-			System.err.println("Poziom folderow jest wiekszy niz defragmentacja! ");
+			System.err.println(Strings.textAllert2);
 		}
 
 		return path;
@@ -188,9 +179,9 @@ public class Scanner implements Runnable
 		if (folders == null)
 		{
 			Alert alert = new Alert(AlertType.CONFIRMATION);
-			alert.setTitle("Alert");
-			alert.setHeaderText("Error Scanning!");
-			alert.setContentText("To continue ok:");
+			alert.setTitle(Strings.textAllert1);
+			alert.setHeaderText(Strings.textError);
+			alert.setContentText(Strings.textContinue);
 
 			Optional<ButtonType> result = alert.showAndWait();
 			if (result.get() == ButtonType.OK){
@@ -198,28 +189,6 @@ public class Scanner implements Runnable
 			} else {
 				setContinueLoop(false);
 			}
-		
-//			fxml_MainController.printLog("Error Read!");
-//			fxml_MainController.printLog("Continue? y/n : ");
-//			String response = null;
-//			BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-//
-//			try
-//			{
-//				response = reader.readLine();
-//			} catch (IOException e)
-//			{
-//				fxml_MainController.printLog("Error scanning!");
-//			}
-//
-//			if (response.equals("y"))
-//			{
-//				
-//			}
-//			if (response.equals("n") || response.equals(null))
-//			{
-//				
-//			}
 		}
 		if (folders != null)
 		{
@@ -266,21 +235,6 @@ public class Scanner implements Runnable
 	public void setReferenceToPath(List<String> path)
 	{
 		this.paths = path;
-	}
-
-	public void start()
-	{
-		LocalThread.start();
-	}
-
-	@Override
-	public void run()
-	{
-		synchronized (this)
-		{
-			
-		}
-
 	}
 
 }

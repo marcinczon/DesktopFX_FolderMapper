@@ -1,13 +1,15 @@
 package FXML_Controllers;
 
+import java.awt.TextField;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
 
-import Scanner.Item;
-import Scanner.Map;
+import Creator.Creator;
+import Scanner.ScannerItem;
+import Scanner.ScannerMap;
 import Scanner.Scanner;
 import Scanner.StringWrap;
 import javafx.application.Platform;
@@ -20,6 +22,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.DirectoryChooser;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 
 public class FXML_MainController
@@ -33,9 +36,10 @@ public class FXML_MainController
 	}
 
 	// References
-	private Map map;
+	private ScannerMap map;
+	private Creator creator;
 	private StringWrap pathSource = new StringWrap();
-	private TreeSet<Item> finalMapItem;
+	private TreeSet<ScannerItem> finalMapItem;
 
 	// *********************************************
 
@@ -55,6 +59,8 @@ public class FXML_MainController
 	ScrollPane spMap;
 	@FXML
 	Pane paneMap;
+	@FXML
+	Label lPath;
 
 	@FXML
 	public void onMouseClickedFile(MouseEvent event)
@@ -69,6 +75,8 @@ public class FXML_MainController
 		{
 			pathSource.setString(selectedDirectory.getAbsolutePath());
 			printLog(pathSource.getString());
+			lPath.setText(pathSource.getString());
+
 		}
 	}
 
@@ -77,7 +85,6 @@ public class FXML_MainController
 	{
 		runnable1 = new Runnable()
 		{
-
 			@Override
 			public void run()
 			{
@@ -88,6 +95,9 @@ public class FXML_MainController
 					{
 						printLog("Status Clear");
 						map.clear();
+						paneMap.getChildren().clear();
+						finalMapItem.clear();
+						
 						printLog("Status Create List");
 						map.createList();
 						printLog("Status Create Map String");
@@ -101,7 +111,7 @@ public class FXML_MainController
 						printLog("Status Creating Nodes");
 						paneMap.getChildren().addAll(map.getNodes());
 						printLog("Status Creating Lines");
-						for (Item item : finalMapItem)
+						for (ScannerItem item : finalMapItem)
 						{
 							paneMap.getChildren().addAll(item.getLine());
 						}
@@ -120,6 +130,7 @@ public class FXML_MainController
 	@FXML
 	public void onMouseClickedCreate(MouseEvent event)
 	{
+		creator.startCreating();
 	}
 
 	public void printLog(String status)
@@ -134,14 +145,24 @@ public class FXML_MainController
 		this.pathSource = pathSource;
 	}
 
-	public void setReferenceMap(Map map)
+	public void setReferenceMap(ScannerMap map)
 	{
 		this.map = map;
 	}
 
-	public void setReferenceFinalMapItem(TreeSet<Item> finalMapItem)
+	public void setReferenceFinalMapItem(TreeSet<ScannerItem> finalMapItem)
 	{
 		this.finalMapItem = finalMapItem;
+	}
+
+	public Pane getPaneMap()
+	{
+		return paneMap;
+	}
+
+	public void setReferenceCreator(Creator creator)
+	{
+		this.creator = creator;
 	}
 
 }
