@@ -100,6 +100,7 @@ public class FXML_MainController implements Initializable
 					@Override
 					public void run()
 					{
+						
 						printLog("Status Clear");
 						map.clear();
 						paneMap.getChildren().clear();
@@ -122,6 +123,8 @@ public class FXML_MainController implements Initializable
 						{
 							paneMap.getChildren().addAll(item.getLine());
 						}
+						
+					
 					}
 				});
 
@@ -182,9 +185,10 @@ public class FXML_MainController implements Initializable
 	@Override
 	public void initialize(URL location, ResourceBundle resources)
 	{
-		// Zmienić property zbindować do odpwoiedniej wartosci z spMap
-		paneMap.prefHeightProperty().bind(spMap.prefViewportHeightProperty());
-		paneMap.prefWidthProperty().bind(spMap.prefViewportWidthProperty());
+		paneMap.setMinHeight(1500);
+		paneMap.setMinWidth(1500);
+		paneMap.prefHeightProperty().bind(spMap.heightProperty());
+		//paneMap.prefWidthProperty().bind(spMap.widthProperty());
 	}
 
 }

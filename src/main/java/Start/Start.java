@@ -41,7 +41,6 @@ public class Start extends Application
 	private static ScannerMap MAP;
 	private static Creator CREATOR;
 	
-	//private static test teest = new test();
 
 	
 	public static void main(String[] args)
@@ -93,9 +92,6 @@ public class Start extends Application
 		MAP.setReferenceMapString(MAP_STRING);
 		MAP.setReferenceMapItems(MAP_ITEMS);
 		MAP.setReferenceFinalMapItem(FINAL_MAP_ITEMS);
-		
-		//teest.setPaneMap(fxml_MainController.getPaneMap());
-		
 		
 	}
 }
