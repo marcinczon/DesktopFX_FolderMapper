@@ -19,7 +19,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import test.test;
 
 // Future work
 // 1. Problem po wystapieniu bledu odczytu, po ponownym ustawieniu sciezki juz nie oczytuje
